@@ -1,0 +1,90 @@
+﻿<Window x:Class="ProglibParser.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:ProglibParser.ViewModel"
+        xmlns:local="clr-namespace:ProglibParser"
+        mc:Ignorable="d"
+        Title="ProglibParser" 
+        Height="500" Width="600"
+        MinWidth="600" MaxWidth="600">
+    <Window.DataContext>
+        <vm:MainViewModel x:Name="MainVM"/>
+    </Window.DataContext>
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding GetPagesRuntimeTemperature}"
+                           Margin="10,0,0,0"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="{Binding ParseRuntimeMeasurement}"
+                           Margin="10,0,0,0"/>
+            </StatusBarItem>
+        </StatusBar>
+        <Grid>
+            <ListView ItemsSource="{Binding Vacancies}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="BorderBrush" Value="LightSlateGray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <Border x:Name="VacanciesListBorder" 
+                                            CornerRadius="10"
+                                            Margin="10"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding Background}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Grid.Column="{TemplateBinding Grid.Column}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="300"/>
+                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="120"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock x:Name="TextBlockName"
+                                                       Grid.Column="0"
+                                                       Text="{Binding Name}"
+                                                       Margin="10,0,0,0"
+                                                       FontSize="15"
+                                                       FontWeight="Bold"
+                                                       TextWrapping="Wrap"
+                                                       Width="300"/>
+                                            <TextBlock x:Name="TextBlockReferences"
+                                                       Grid.Column="1"
+                                                       Margin="10,0,0,0">
+                                                <Hyperlink NavigateUri="{Binding Reference}" 
+                                                           RequestNavigate="Hyperlink_RequestNavigate" 
+                                                           >Ссылка на сайт</Hyperlink>
+                                            </TextBlock>
+
+                                            <TextBlock x:Name="TextBlockPostData"
+                                                       Grid.Column="2"
+                                                       Text="{Binding PostData}"
+                                                       Margin="10,0,0,0"
+                                                       FontSize="15"/>
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="VacanciesListBorder" Property="Background" Value="#A8A2D4"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="VacanciesListBorder" Property="Background" Value="#A8A2A1"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
+    </DockPanel>
+</Window>
