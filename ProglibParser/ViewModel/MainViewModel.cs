@@ -1,5 +1,4 @@
 ﻿using ParserLib;
-using ProglibParser.Infrastructure.Services;
 using ProglibParser.Model;
 using System;
 using System.Collections.Generic;
@@ -46,12 +45,7 @@ namespace ProglibParser.ViewModel
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
-
-                IEnumerable<string> pages = await ProglibHttp.GetHttpPagesParallel();
-                stopwatch.Stop();
-                GetPagesRuntimeTemperature = $"Downloading the data took {stopwatch.ElapsedMilliseconds} ms";
-                stopwatch.Restart();
-                Vacancies = new ObservableCollection<Vacancy>(VacancyService.GetVacancies(pages).OrderByDescending(v => v.PostData));
+                Vacancies = new ObservableCollection<Vacancy>(await Selector.GetVacanciesFromAllPagesAsync());
                 stopwatch.Stop();
                 ParseRuntimeMeasurement = $"Parsing the data took {stopwatch.ElapsedMilliseconds} ms";
             }
