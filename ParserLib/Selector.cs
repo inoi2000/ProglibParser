@@ -15,24 +15,14 @@ namespace ParserLib
         public static async Task<List<string>> GetVacancyNamesAsync(string url)
         {
             List<string> finalResult = new List<string>();
-            var task = Task.Run(async () => {
-
-                IConfiguration config = Configuration.Default.WithDefaultLoader();
-                IBrowsingContext context = BrowsingContext.New(config);
-                AngleSharp.Dom.IDocument document = await context.OpenAsync(url);
-
-
-                string selector = "article > div > div > a > div.flex.align-between > h2";
-
-                AngleSharp.Dom.IHtmlCollection<AngleSharp.Dom.IElement> elements =
-                document.QuerySelectorAll(selector);
-
-                IEnumerable<string> results = elements.Select(it => it.TextContent);
-                finalResult = results.ToList();
-
-            });
-
-            await task;
+            IConfiguration config = Configuration.Default.WithDefaultLoader();
+            IBrowsingContext context = BrowsingContext.New(config);
+            AngleSharp.Dom.IDocument document = await context.OpenAsync(url);
+            string selector = "article > div > div > a > div.flex.align-between > h2";
+            AngleSharp.Dom.IHtmlCollection<AngleSharp.Dom.IElement> elements =
+            document.QuerySelectorAll(selector);
+            IEnumerable<string> results = elements.Select(it => it.TextContent);
+            finalResult = results.ToList();
             return finalResult;
         }
 
@@ -76,15 +66,14 @@ namespace ParserLib
             else throw new NullReferenceException();
         }
 
-        public static async Task<ConcurrentBag<Vacancy>> GetVacanciesByURLAsync(string url)
+        public static async Task<IEnumerable<Vacancy>> GetVacanciesAsync(string url)
         {
-            ConcurrentBag<Vacancy> vacancies = new ConcurrentBag<Vacancy>();
-
-            var names = await GetVacancyNamesAsync(url);
-            var refs = await GetVacancyReferencesAsync(url);
-            var dates = await GetPublishingDatesAsync(url);
-            await Task.Run(() => 
+            var vacancies = new List<Vacancy>();
+            try
             {
+                var names = await GetVacancyNamesAsync(url);
+                var refs = await GetVacancyReferencesAsync(url);
+                var dates = await GetPublishingDatesAsync(url);
                 for (int i = 0; i < names.Count; i++)
                 {
                     var vacancy = new Vacancy
@@ -95,13 +84,14 @@ namespace ParserLib
                     };
                     vacancies.Add(vacancy);
                 };
-            });
+            }
+            catch { }
             return vacancies;
         }
 
-        public static async Task<IEnumerable<Vacancy>> GetVacanciesFromAllPagesAsync()
+        public static async Task<IEnumerable<Vacancy>> GetVacanciesFromAllPagesParallel()
         {
-            var vacanciesBag = new ConcurrentBag<Vacancy>();
+            var vacanciesBag = new List<Vacancy>();
             int totalPages = await GetTotalPagesAsync();
             List<string> refs = new List<string>();
             for (int i = 1; i <= totalPages; i++)
@@ -114,8 +104,8 @@ namespace ParserLib
 
             await Parallel.ForEachAsync(refs, options, async (currentUrl, token) =>
             {
-                ConcurrentBag<Vacancy> vacancies = await GetVacanciesByURLAsync(currentUrl);
-                Parallel.ForEach(vacancies, vac => { vacanciesBag.Add(vac); });
+                var vacancies = await GetVacanciesAsync(currentUrl);
+                Parallel.ForEach(vacancies, v => { vacanciesBag.Add(v); });
             });
             return vacanciesBag;
         }

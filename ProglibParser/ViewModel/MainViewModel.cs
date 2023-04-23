@@ -45,7 +45,7 @@ namespace ProglibParser.ViewModel
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
-                Vacancies = new ObservableCollection<Vacancy>(await Selector.GetVacanciesFromAllPagesAsync());
+                Vacancies = new ObservableCollection<Vacancy>(await Selector.GetVacanciesFromAllPagesParallel());
                 stopwatch.Stop();
                 ParseRuntimeMeasurement = $"Parsing the data took {stopwatch.ElapsedMilliseconds} ms";
             }
