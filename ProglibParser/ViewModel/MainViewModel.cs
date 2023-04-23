@@ -50,7 +50,6 @@ namespace ProglibParser.ViewModel
                 ParseRuntimeMeasurement = $"Parsing the data took {stopwatch.ElapsedMilliseconds} ms";
             }
             catch { }
-
             OnPropertyChanged(nameof(Vacancies));
         }
 
