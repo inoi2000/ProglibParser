@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProglibParser", "ProglibParser\ProglibParser.csproj", "{E11D8895-13F8-46F5-8609-AD4668D880AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProglibParser", "ProglibParser\ProglibParser.csproj", "{E11D8895-13F8-46F5-8609-AD4668D880AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proglib", "ParserLib\Proglib.csproj", "{78CAD0C3-433C-4E7A-A662-1A8EF33D6A60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{E11D8895-13F8-46F5-8609-AD4668D880AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E11D8895-13F8-46F5-8609-AD4668D880AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E11D8895-13F8-46F5-8609-AD4668D880AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78CAD0C3-433C-4E7A-A662-1A8EF33D6A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78CAD0C3-433C-4E7A-A662-1A8EF33D6A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78CAD0C3-433C-4E7A-A662-1A8EF33D6A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78CAD0C3-433C-4E7A-A662-1A8EF33D6A60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
