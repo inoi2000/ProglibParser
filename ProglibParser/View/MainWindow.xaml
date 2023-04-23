@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Title="ProglibParser" 
         Height="500" Width="600"
-        MinWidth="600" MaxWidth="600">
+        MinWidth="600" MaxWidth="600"
+        >
     <Window.DataContext>
         <vm:MainViewModel x:Name="MainVM"/>
     </Window.DataContext>
@@ -66,7 +67,7 @@
 
                                             <TextBlock x:Name="TextBlockPostData"
                                                        Grid.Column="2"
-                                                       Text="{Binding PostData}"
+                                                       Text="{Binding PostData, StringFormat=\{0:dd.MMM.yyyy\}}"
                                                        Margin="10,0,0,0"
                                                        FontSize="15"/>
                                         </Grid>

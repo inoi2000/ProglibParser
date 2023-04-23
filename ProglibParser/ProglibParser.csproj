@@ -11,4 +11,8 @@
     <Folder Include="Model\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ParserLib\Proglib.csproj" />
+  </ItemGroup>
+
 </Project>

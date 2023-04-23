@@ -1,4 +1,5 @@
-﻿using ProglibParser.Infrastructure.Services;
+﻿using ParserLib;
+using ProglibParser.Infrastructure.Services;
 using ProglibParser.Model;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Navigation;
 using static System.Net.WebRequestMethods;
 
@@ -34,33 +36,28 @@ namespace ProglibParser.ViewModel
         }
         #endregion
 
-        public MainViewModel()
+        public MainViewModel() 
         {
-            Load().GetAwaiter();
+            Task.Run(() => Loaded());
         }
 
-        private async Task Load()
+        public async Task Loaded()
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            try
+            {
+                Stopwatch stopwatch = Stopwatch.StartNew();
 
-            #region Без распаралеливания
-            //Vacancies = new ObservableCollection<Vacancy>(await VacancyService.Instance.GetAllVacancies());
-            //stopwatch.Stop();
-            //ParseRuntimeMeasurement = $"Parsing the data took {stopwatch.ElapsedMilliseconds} ms";
-            //OnPropertyChanged(nameof(Vacancies));
-            #endregion
+                IEnumerable<string> pages = await ProglibHttp.GetHttpPagesParallel();
+                stopwatch.Stop();
+                GetPagesRuntimeTemperature = $"Downloading the data took {stopwatch.ElapsedMilliseconds} ms";
+                stopwatch.Restart();
+                Vacancies = new ObservableCollection<Vacancy>(VacancyService.GetVacancies(pages).OrderByDescending(v => v.PostData));
+                stopwatch.Stop();
+                ParseRuntimeMeasurement = $"Parsing the data took {stopwatch.ElapsedMilliseconds} ms";
+            }
+            catch { }
 
-            #region С распаралеливанием
-            IEnumerable<string> pages = await VacancyService.Instance.GetHttpPagesAsync();
-            stopwatch.Stop();
-            GetPagesRuntimeTemperature = $"Downloading the data took {stopwatch.ElapsedMilliseconds} ms";
-            stopwatch.Restart();
-            Vacancies = new ObservableCollection<Vacancy>(await VacancyService.Instance.GetVacanciesAsync(pages));
-            stopwatch.Stop();
-            ParseRuntimeMeasurement = $"Parsing the data took {stopwatch.ElapsedMilliseconds} ms";
             OnPropertyChanged(nameof(Vacancies));
-            #endregion
-
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
