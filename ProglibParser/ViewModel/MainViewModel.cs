@@ -1,4 +1,5 @@
 ﻿using ParserLib;
+using Proglib;
 using ProglibParser.Model;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,14 @@ namespace ProglibParser.ViewModel
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
-                Vacancies = new ObservableCollection<Vacancy>(await Selector.GetVacanciesFromAllPagesParallel());
+
+                // первая версия парсера, средняя скорость выполнения 5100-5200 мс
+                //Vacancies = new ObservableCollection<Vacancy>(await Selector.GetVacanciesFromAllPagesParallel());
+
+                // вторая версия парсера, средняя скорость выполнения 2600-2700 мс
+                Vacancies = new ObservableCollection<Vacancy>(await new Parser().GetVacanciesFromAllPagesParallel());
+
+
                 stopwatch.Stop();
                 ParseRuntimeMeasurement = $"Parsing the data took {stopwatch.ElapsedMilliseconds} ms";
             }
